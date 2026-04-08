@@ -3,982 +3,492 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emissão de NFS-e</title>
+<title>Emissão de NFS-e | Zukkin</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+  :root {
+    --red: #D32F2F; --red-dark: #B71C1C; --red-light: #EF5350;
+    --dark: #111111; --dark2: #1a1a1a; --dark3: #222222;
+    --card: #2a2a2a; --card2: #333333;
+    --white: #ffffff; --gray: #e0e0e0; --gray2: #aaaaaa;
+    --green: #2e7d32; --radius: 14px;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Inter', 'Segoe UI', sans-serif; background:#111; color:#fff; }
+  body { font-family:'Inter','Segoe UI',sans-serif; background:var(--dark); color:var(--white); height:100vh; overflow:hidden; display:flex; flex-direction:column; }
 
-  /* SLIDE BASE */
-  .slide {
-    min-height: 100vh;
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #3a3a3a 100%);
-    border-bottom: 4px solid #000;
-  }
+  .header { background:var(--dark2); padding:0 32px; height:60px; display:flex; align-items:center; gap:16px; border-bottom:2px solid var(--red); flex-shrink:0; }
+  .header-logo { font-size:22px; font-weight:900; color:var(--red); letter-spacing:-1px; }
+  .header-title { font-size:15px; font-weight:600; color:var(--gray); border-left:2px solid #444; padding-left:16px; }
+  .header-badge { margin-left:auto; background:var(--red); color:white; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; text-transform:uppercase; }
 
-  /* LISTRAS DIAGONAIS */
-  .stripes {
-    width: 100%;
-    height: 32px;
-    background: repeating-linear-gradient(
-      -45deg,
-      #fff 0px, #fff 8px,
-      #000 8px, #000 16px
-    );
-    flex-shrink: 0;
-  }
+  .nav { background:var(--dark3); display:flex; align-items:center; padding:0 24px; border-bottom:1px solid #333; flex-shrink:0; overflow-x:auto; gap:2px; scrollbar-width:none; }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-btn { padding:14px 20px; font-size:13px; font-weight:600; color:var(--gray2); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all 0.2s; background:none; border-top:none; border-left:none; border-right:none; display:flex; align-items:center; gap:8px; }
+  .nav-btn:hover { color:var(--white); border-bottom-color:#555; }
+  .nav-btn.active { color:var(--red-light); border-bottom-color:var(--red); }
+  .nav-btn .nav-num { width:20px; height:20px; background:#444; border-radius:50%; font-size:10px; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+  .nav-btn.active .nav-num { background:var(--red); color:white; }
+  .nav-btn.done .nav-num { background:var(--green); color:white; }
 
-  .slide-body {
-    flex: 1;
-    padding: 40px 28px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
+  .main { flex:1; overflow:hidden; position:relative; }
+  .section { position:absolute; inset:0; display:none; overflow-y:auto; padding:32px; scrollbar-width:thin; scrollbar-color:#444 transparent; }
+  .section.active { display:flex; flex-direction:column; }
+  .section::-webkit-scrollbar { width:6px; }
+  .section::-webkit-scrollbar-thumb { background:#444; border-radius:3px; }
 
-  /* CAPA */
-  .cover { background: linear-gradient(180deg, #000 0%, #1a1a1a 40%, #333 100%); }
-  .cover .slide-body { justify-content: flex-start; padding-top: 60px; }
-  .cover h1 {
-    font-size: 64px;
-    font-weight: 900;
-    line-height: 1.05;
-    letter-spacing: -2px;
-    margin-bottom: 16px;
-  }
-  .cover h2 {
-    font-size: 20px;
-    font-style: italic;
-    font-weight: 700;
-    opacity: 0.9;
-    letter-spacing: 1px;
-    margin-bottom: 40px;
-  }
-  .cover-chars {
-    font-size: 80px;
-    margin-top: 20px;
-    letter-spacing: -8px;
-  }
+  .cover-section { align-items:center; justify-content:center; text-align:center; background:radial-gradient(ellipse at 30% 50%, #2a0000 0%, var(--dark) 70%); }
+  .cover-stripes { position:absolute; top:0; left:0; right:0; height:8px; background:repeating-linear-gradient(-45deg,#fff 0px,#fff 4px,#000 4px,#000 8px); }
+  .cover-section h1 { font-size:72px; font-weight:900; line-height:1; letter-spacing:-3px; margin-bottom:8px; }
+  .cover-section h1 span { color:var(--red); }
+  .cover-section .sub { font-size:18px; font-weight:700; font-style:italic; color:var(--gray2); margin-bottom:40px; letter-spacing:2px; text-transform:uppercase; }
+  .cover-cards { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .cover-card { background:var(--card); border:1px solid #444; border-radius:var(--radius); padding:20px 24px; display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; min-width:180px; }
+  .cover-card:hover { border-color:var(--red); transform:translateY(-2px); }
+  .cover-card .cc-icon { font-size:28px; }
+  .cover-card .cc-num { background:var(--red); color:white; width:24px; height:24px; border-radius:50%; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .btn-start { background:var(--red); color:white; border:none; padding:16px 48px; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+  .btn-start:hover { background:var(--red-dark); transform:translateY(-2px); box-shadow:0 6px 20px rgba(211,47,47,0.4); }
 
-  /* TÍTULOS DE SEÇÃO */
-  .section-title {
-    font-size: 52px;
-    font-weight: 900;
-    line-height: 1.05;
-    margin-bottom: 24px;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-  }
-  .section-title .red { color: #D32F2F; }
+  .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:1100px; margin:0 auto; width:100%; }
+  .content-grid.wide { grid-template-columns:1fr 1.2fr; }
 
-  /* TEXTO CORPO */
-  .body-text {
-    font-size: 18px;
-    line-height: 1.7;
-    color: #e0e0e0;
-    margin-bottom: 28px;
-    text-align: center;
-  }
-  .body-text strong { color: #fff; font-weight: 700; }
+  .sec-header { display:flex; align-items:center; gap:16px; margin-bottom:28px; max-width:1100px; width:100%; align-self:flex-start; }
+  .sec-num { font-size:80px; font-weight:900; color:var(--red); line-height:1; font-style:italic; flex-shrink:0; }
+  .sec-title { font-size:32px; font-weight:900; line-height:1.1; letter-spacing:-1px; }
+  .sec-title span { color:var(--red); }
+  .sec-subtitle { font-size:14px; color:var(--gray2); margin-top:4px; }
 
-  /* NÚMERO DO PASSO */
-  .step-number {
-    font-size: 120px;
-    font-weight: 900;
-    color: #D32F2F;
-    line-height: 1;
-    margin-bottom: 24px;
-    font-style: italic;
-  }
+  .card { background:var(--card); border-radius:var(--radius); padding:24px; border:1px solid #3a3a3a; }
+  .card h3 { font-size:13px; font-weight:700; color:var(--gray); margin-bottom:16px; display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .card h3 .ch-dot { width:8px; height:8px; background:var(--red); border-radius:50%; flex-shrink:0; }
+  .card-red { border-left:3px solid var(--red); }
 
-  /* BOTÃO PORTAL */
-  .portal-btn {
-    background: #D32F2F;
-    color: white;
-    border: none;
-    padding: 20px 32px;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: underline;
-    width: 100%;
-    margin: 20px 0;
-    letter-spacing: 0.5px;
-  }
+  .alert { border-radius:10px; padding:14px 18px; display:flex; gap:12px; font-size:14px; line-height:1.6; margin-bottom:16px; }
+  .alert-icon { font-size:20px; flex-shrink:0; }
+  .alert strong { display:block; font-size:14px; margin-bottom:2px; }
+  .alert-danger { background:rgba(211,47,47,0.15); border:1px solid rgba(211,47,47,0.3); color:#ffcdd2; }
+  .alert-warning { background:rgba(245,127,23,0.15); border:1px solid rgba(245,127,23,0.3); color:#ffe0b2; }
+  .alert-success { background:rgba(46,125,50,0.15); border:1px solid rgba(46,125,50,0.3); color:#c8e6c9; }
+  .alert-info { background:rgba(21,101,192,0.15); border:1px solid rgba(21,101,192,0.3); color:#bbdefb; }
 
-  /* ATENÇÃO BOX */
-  .atencao-title {
-    font-size: 36px;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 16px;
-    letter-spacing: 2px;
-  }
+  .step-list { display:flex; flex-direction:column; gap:12px; }
+  .step-item { display:flex; gap:14px; align-items:flex-start; }
+  .step-item .si-num { width:32px; height:32px; background:var(--red); border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; }
+  .step-item .si-content h4 { font-size:14px; font-weight:700; margin-bottom:3px; }
+  .step-item .si-content p { font-size:13px; color:var(--gray2); line-height:1.5; }
+  .step-item .si-content strong { color:var(--white); }
 
-  /* SCREENSHOT */
-  .screenshot {
-    width: 100%;
-    border-radius: 8px;
-    margin: 20px 0;
-    border: 2px solid #444;
-    overflow: hidden;
-    background: #fff;
-    font-size: 11px;
-    color: #333;
-    text-align: left;
-  }
-  .screenshot-bar {
-    background: #2e7d32;
-    color: white;
-    padding: 8px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .screenshot-bar .logo-nfse { font-size: 16px; font-weight: 900; color: #fff; }
-  .screenshot-inner { padding: 12px; }
-  .screenshot-nav {
-    background: #f5f5f5;
-    border-bottom: 1px solid #ddd;
-    padding: 6px 10px;
-    display: flex;
-    gap: 12px;
-    font-size: 10px;
-    color: #666;
-  }
+  .login-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:16px 0; }
+  .login-opt { background:var(--card2); border:1px solid #444; border-radius:10px; padding:16px 12px; text-align:center; }
+  .login-opt .lo-icon { font-size:28px; margin-bottom:8px; }
+  .login-opt .lo-title { font-size:12px; font-weight:700; margin-bottom:4px; }
+  .login-opt .lo-desc { font-size:11px; color:var(--gray2); line-height:1.4; }
+  .login-opt .lo-badge { display:inline-block; background:rgba(211,47,47,0.2); color:var(--red-light); font-size:9px; font-weight:700; padding:2px 8px; border-radius:10px; margin-top:6px; text-transform:uppercase; }
 
-  /* LOGIN OPTIONS */
-  .login-cols {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-    margin: 16px 0;
-  }
-  .login-col {
-    background: #f5f5f5;
-    border-radius: 6px;
-    padding: 10px 6px;
-    text-align: center;
-    color: #333;
-    font-size: 10px;
-  }
-  .login-col .lc-title { font-weight: 700; font-size: 9px; margin-bottom: 4px; color: #1565C0; }
+  .mock { background:#fff; border-radius:10px; overflow:hidden; border:1px solid #444; color:#333; }
+  .mock-bar { background:var(--green); color:white; padding:8px 14px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:space-between; }
+  .mock-body { padding:12px; font-size:10px; }
+  .mock-section-label { background:#E8F5E9; color:var(--green); font-size:9px; font-weight:700; text-transform:uppercase; padding:4px 8px; margin:8px 0 6px; }
+  .mock-field { margin-bottom:6px; }
+  .mock-field label { font-size:8px; color:#666; display:block; margin-bottom:2px; }
+  .mock-input { border:1px solid #ccc; border-radius:3px; height:20px; background:#fafafa; width:100%; }
+  .mock-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .mock-info { background:#E3F2FD; padding:6px 8px; border-radius:4px; font-size:8px; color:#1565C0; margin-bottom:6px; }
+  .mock-radio { font-size:9px; color:#555; margin-bottom:3px; }
+  .mock-highlight { background:rgba(211,47,47,0.1); border-left:2px solid var(--red); padding:6px 8px; font-size:9px; color:var(--red); font-weight:700; border-radius:0 4px 4px 0; margin:6px 0; }
 
-  /* OBS BOX */
-  .obs-box {
-    background: transparent;
-    color: #e0e0e0;
-    font-size: 16px;
-    line-height: 1.7;
-    text-align: center;
-    padding: 0 8px;
-  }
-  .obs-box strong { color: #fff; }
+  .activity-code { background:#0a0a0a; border:1px solid #333; border-radius:8px; padding:14px 18px; font-family:'Courier New',monospace; font-size:13px; color:#69F0AE; font-weight:700; margin:12px 0; }
 
-  /* ATENÇÃO VERMELHA */
-  .atencao-red {
-    font-size: 52px;
-    font-weight: 900;
-    color: #D32F2F;
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
+  .mobile-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .mobile-item { background:var(--card); border-radius:10px; padding:16px; border:1px solid #3a3a3a; display:flex; gap:12px; align-items:flex-start; }
+  .mobile-item .mi-num { font-size:40px; font-weight:900; color:var(--red); font-style:italic; line-height:1; flex-shrink:0; }
+  .mobile-item .mi-text { font-size:13px; color:var(--gray2); line-height:1.5; padding-top:4px; }
+  .mobile-item .mi-text strong { color:var(--white); }
 
-  /* SLIDE COM NÚMERO + TEXTO LADO */
-  .step-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    text-align: left;
-    width: 100%;
-    margin-bottom: 32px;
-  }
-  .step-row .num {
-    font-size: 72px;
-    font-weight: 900;
-    color: #D32F2F;
-    font-style: italic;
-    line-height: 1;
-    flex-shrink: 0;
-    width: 60px;
-  }
-  .step-row .txt {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #e0e0e0;
-    padding-top: 8px;
-  }
-  .step-row .txt strong { color: #fff; }
+  .app-btns { display:flex; gap:12px; margin:16px 0; }
+  .app-btn { flex:1; background:#1a1a1a; border:1px solid #444; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; color:white; cursor:pointer; transition:all 0.2s; }
+  .app-btn:hover { border-color:var(--red); }
+  .app-btn .ab-icon { font-size:24px; }
+  .app-btn .ab-sub { font-size:10px; color:var(--gray2); }
+  .app-btn .ab-name { font-size:15px; font-weight:700; }
 
-  /* PRONTO BOX */
-  .pronto-bubble {
-    background: #D32F2F;
-    border-radius: 20px 20px 20px 4px;
-    padding: 24px 28px;
-    font-size: 28px;
-    font-weight: 900;
-    color: white;
-    margin-top: 20px;
-    position: relative;
-  }
+  .yt-link { background:var(--card); border:1px solid #3a3a3a; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s; color:inherit; }
+  .yt-link:hover { border-color:var(--red); transform:translateX(4px); }
+  .yt-icon-box { background:var(--red); border-radius:8px; width:48px; height:40px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .yt-text h4 { font-size:14px; font-weight:700; margin-bottom:3px; }
+  .yt-text p { font-size:13px; color:var(--gray2); }
 
-  /* APP DOWNLOAD */
-  .app-stores {
-    display: flex;
-    gap: 8px;
-    margin: 12px 0;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .app-store-btn {
-    background: #000;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-  }
+  .nav-footer { background:var(--dark2); border-top:1px solid #333; padding:12px 32px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+  .btn-nav { background:var(--card); border:1px solid #444; color:white; padding:10px 24px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; transition:all 0.2s; }
+  .btn-nav:hover { border-color:var(--red); color:var(--red-light); }
+  .btn-nav:disabled { opacity:0.3; cursor:not-allowed; }
+  .btn-nav-next { background:var(--red); border-color:var(--red); }
+  .btn-nav-next:hover { background:var(--red-dark); border-color:var(--red-dark); color:white; }
+  .nav-progress { display:flex; align-items:center; gap:6px; }
+  .np-dot { width:8px; height:8px; border-radius:50%; background:#444; transition:all 0.2s; cursor:pointer; }
+  .np-dot.active { background:var(--red); width:24px; border-radius:4px; }
+  .np-dot.done { background:var(--green); }
 
-  /* DUVIDAS */
-  .duvidas-title {
-    font-size: 72px;
-    font-weight: 900;
-    color: #D32F2F;
-    text-transform: uppercase;
-    line-height: 1;
-    margin-bottom: 32px;
-    letter-spacing: -2px;
-  }
-  .youtube-link {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 24px;
-    text-align: left;
-    width: 100%;
-  }
-  .yt-icon {
-    background: #D32F2F;
-    border-radius: 10px;
-    width: 56px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 20px;
-  }
-  .yt-text {
-    font-size: 16px;
-    color: #e0e0e0;
-    line-height: 1.5;
-  }
-  .yt-text strong { color: #fff; text-decoration: underline; }
+  .portal-btn { background:var(--red); color:white; border:none; padding:14px 24px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; width:100%; margin:16px 0; display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; transition:all 0.2s; }
+  .portal-btn:hover { background:var(--red-dark); }
 
-  /* ZUKKIN LOGO */
-  .zukkin-logo {
-    font-size: 56px;
-    font-weight: 900;
-    color: #D32F2F;
-    letter-spacing: -2px;
-    margin-top: 32px;
-  }
+  .highlight-box { background:rgba(245,127,23,0.1); border:1px solid rgba(245,127,23,0.3); border-radius:10px; padding:14px 18px; font-size:13px; color:#ffe0b2; line-height:1.6; margin:12px 0; }
+  .highlight-box strong { color:#FFB74D; }
 
-  /* FORM MOCK */
-  .form-mock {
-    background: #fff;
-    color: #333;
-    border-radius: 8px;
-    padding: 14px;
-    width: 100%;
-    margin: 16px 0;
-    text-align: left;
-    font-size: 11px;
-  }
-  .form-mock .fm-section {
-    background: #E8F5E9;
-    padding: 6px 10px;
-    font-weight: 700;
-    font-size: 10px;
-    color: #2E7D32;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .form-mock .fm-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .form-mock .fm-field label {
-    font-size: 10px;
-    color: #666;
-    display: block;
-    margin-bottom: 3px;
-  }
-  .form-mock .fm-field input {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px 6px;
-    font-size: 10px;
-    height: 22px;
-    background: #fafafa;
-  }
-  .form-mock .fm-field.full { grid-column: 1 / -1; }
-  .form-mock .fm-radio {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10px;
-    margin-bottom: 4px;
-    color: #333;
-  }
-  .form-mock .fm-radio.selected { color: #1565C0; font-weight: 700; }
-  .fm-arrow { color: #D32F2F; font-size: 14px; margin-right: 4px; }
+  .summary-list { display:flex; flex-direction:column; gap:8px; }
+  .summary-item { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--gray); background:var(--card2); padding:10px 14px; border-radius:8px; border-left:3px solid var(--green); cursor:pointer; }
+  .summary-item .si-check { color:#69F0AE; font-size:16px; flex-shrink:0; }
 
-  /* HIGHLIGHT TOOLTIP */
-  .tooltip-box {
-    background: #CE93D8;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 10px;
-    color: #4A148C;
-    font-weight: 600;
-    margin: 6px 0;
-    text-align: center;
-  }
-  .tooltip-green {
-    background: #A5D6A7;
-    color: #1B5E20;
-  }
-
-  /* SEPARADOR */
-  .sep { height: 1px; background: #333; width: 100%; margin: 16px 0; }
-
-  @media (max-width: 520px) {
-    .slide { max-width: 100%; }
+  @media (max-width:768px) {
+    .content-grid, .content-grid.wide { grid-template-columns:1fr; }
+    .login-grid, .mobile-grid { grid-template-columns:1fr; }
+    .app-btns { flex-direction:column; }
+    .section { padding:20px 16px; }
+    .cover-section h1 { font-size:48px; }
+    .sec-num { font-size:56px; }
+    .sec-title { font-size:24px; }
+    .header, .nav-footer { padding:0 16px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ========== SLIDE 1: CAPA ========== -->
-<div class="slide cover">
-  <div class="slide-body">
-    <h1>Emissão<br>de NFS-e</h1>
-    <h2>EMISSOR VERSÃO WEB E MOBILE</h2>
-    <div style="font-size:72px;margin-top:16px;">👥</div>
-  </div>
+<div class="header">
+  <div class="header-logo">Zukkin</div>
+  <div class="header-title">Tutorial — Emissão de NFS-e</div>
+  <div class="header-badge">MEI · Web · Mobile</div>
 </div>
 
-<!-- ========== SLIDE 2: PRIMEIRO ACESSO ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="section-title">PRIMEIRO <span class="red">ACESSO</span></div>
-    <p class="body-text">
-      Para o Empreendedor poder utilizar o Portal Nacional de Emissão de Nota Fiscal de Serviços eletrônica e o APP, poderá acessar com a sua conta gov.br ou efetuar o cadastramento dos dados da pessoa jurídica no emissor web:
-    </p>
-    <button class="portal-btn">Portal Emissor - NFSe</button>
-    <div class="atencao-title">ATENÇÃO!</div>
-    <p class="body-text">Para usar o APP é pré-requisito fazer a configuração primeiro no Emissor Web!</p>
-  </div>
+<div class="nav">
+  <button class="nav-btn active" onclick="goTo(0)"><span class="nav-num">🏠</span> Início</button>
+  <button class="nav-btn" onclick="goTo(1)"><span class="nav-num">1</span> Primeiro Acesso</button>
+  <button class="nav-btn" onclick="goTo(2)"><span class="nav-num">2</span> Configuração</button>
+  <button class="nav-btn" onclick="goTo(3)"><span class="nav-num">3</span> Serviços Favoritos</button>
+  <button class="nav-btn" onclick="goTo(4)"><span class="nav-num">4</span> Emissão Web</button>
+  <button class="nav-btn" onclick="goTo(5)"><span class="nav-num">5</span> App Mobile</button>
+  <button class="nav-btn" onclick="goTo(6)"><span class="nav-num">❓</span> Dúvidas</button>
 </div>
 
-<!-- ========== SLIDE 3: SEU ACESSO ESTÁ PRONTO ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div style="background:#fff;color:#111;padding:20px 24px;border-radius:12px;margin-bottom:28px;width:100%;">
-      <div style="font-size:28px;font-weight:900;text-align:center;line-height:1.2;">SEU ACESSO<br><span style="color:#D32F2F;">ESTÁ PRONTO!</span></div>
+<div class="main">
+
+  <!-- CAPA -->
+  <div class="section cover-section active" id="sec-0">
+    <div class="cover-stripes"></div>
+    <h1>Emissão<br>de <span>NFS-e</span></h1>
+    <div class="sub">Emissor Versão Web e Mobile</div>
+    <div class="cover-cards">
+      <div class="cover-card" onclick="goTo(1)"><span class="cc-icon">🔑</span><div><div style="font-size:12px;color:var(--gray2);">Etapa</div><div>Primeiro Acesso</div></div><span class="cc-num">1</span></div>
+      <div class="cover-card" onclick="goTo(2)"><span class="cc-icon">⚙️</span><div><div style="font-size:12px;color:var(--gray2);">Etapa</div><div>Configuração</div></div><span class="cc-num">2</span></div>
+      <div class="cover-card" onclick="goTo(3)"><span class="cc-icon">⭐</span><div><div style="font-size:12px;color:var(--gray2);">Etapa</div><div>Serviços Favoritos</div></div><span class="cc-num">3</span></div>
+      <div class="cover-card" onclick="goTo(4)"><span class="cc-icon">🌐</span><div><div style="font-size:12px;color:var(--gray2);">Etapa</div><div>Emissão Web</div></div><span class="cc-num">4</span></div>
+      <div class="cover-card" onclick="goTo(5)"><span class="cc-icon">📱</span><div><div style="font-size:12px;color:var(--gray2);">Etapa</div><div>App Mobile</div></div><span class="cc-num">5</span></div>
     </div>
-    <p class="body-text">
-      Você deverá acessar o portal para cadastrar os dados da atividade econômica desenvolvida e configurar os dados da sua empresa para emissão de NFS-e.
-    </p>
-    <!-- Screenshot login page -->
-    <div class="screenshot">
-      <div class="screenshot-bar">
-        <span class="logo-nfse">NFSe</span>
-        <span style="font-size:10px;opacity:0.8;">Portal de Gestão NFS-e - Contribuinte</span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:12px;background:#fff;">
-        <div style="padding:8px;border-right:1px solid #eee;font-size:9px;color:#333;">
-          <div style="font-weight:700;color:#1565C0;margin-bottom:6px;font-size:9px;">ACESSO COM USUÁRIO/SENHA</div>
-          <input style="width:100%;border:1px solid #ccc;padding:3px;margin-bottom:4px;font-size:9px;" placeholder="CPF/CNPJ">
-          <input style="width:100%;border:1px solid #ccc;padding:3px;margin-bottom:6px;font-size:9px;" placeholder="Senha" type="password">
-          <div style="background:#1565C0;color:white;padding:4px;text-align:center;border-radius:3px;font-size:8px;">Entrar</div>
-        </div>
-        <div style="padding:8px;border-right:1px solid #eee;font-size:9px;color:#333;text-align:center;">
-          <div style="font-weight:700;color:#1565C0;margin-bottom:6px;font-size:9px;">ACESSO COM CERTIFICADO DIGITAL</div>
-          <div style="font-size:18px;margin:8px 0;">🔐</div>
-          <div style="font-size:8px;color:#666;">Se você já possui certificado digital, clique na imagem abaixo</div>
-        </div>
-        <div style="padding:8px;font-size:9px;color:#333;text-align:center;">
-          <div style="font-weight:700;color:#1565C0;margin-bottom:6px;font-size:9px;">ACESSO VIA GOVBR</div>
-          <div style="font-size:8px;color:#666;margin-bottom:8px;">O GovBR é um serviço online de identificação e autenticação do cidadão</div>
-          <div style="background:#1565C0;color:white;padding:4px 6px;border-radius:4px;font-size:8px;">Entrar com gov.br</div>
-        </div>
-      </div>
-    </div>
-    <p class="obs-box"><strong>Observações:</strong> Há 3 opções de login no Emissor Web pelo MEI: acesso com usuário e senha realizando o cadastramento pelo portal, certificado digital e a conta gov.br. O login no site gov.br só está disponível para o MEI. Ele deve ser feito pelo seu representante legal. Após o login com o CPF, o emissor abrirá para o seu CNPJ MEI. Para fazer o login no gov.br, o representante legal deverá ter os selos <strong>prata ou ouro</strong>.</p>
+    <button class="btn-start" onclick="goTo(1)">Começar Tutorial →</button>
   </div>
-</div>
 
-<!-- ========== SLIDE 4: PASSO 1 - CONFIGURAÇÕES ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="step-number">1</div>
-    <p class="body-text">
-      No seu primeiro acesso, será necessário acessar as configurações. Isso pode ser feito clicando em qualquer um dos símbolos abaixo:
-    </p>
-    <!-- Screenshot dashboard NFSe -->
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:14px;">NFSe <span style="font-size:10px;font-weight:400;">EMISSOR</span></span>
-        <div style="display:flex;gap:6px;font-size:14px;">🏠 🔔 📋 📄 📝 <span style="background:rgba(255,255,255,0.3);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #fff;">⚙️</span> ⭐ 👤</div>
+  <!-- SEÇÃO 1: PRIMEIRO ACESSO -->
+  <div class="section" id="sec-1">
+    <div class="sec-header">
+      <div class="sec-num">1</div>
+      <div><div class="sec-title">PRIMEIRO <span>ACESSO</span></div><div class="sec-subtitle">Como entrar no Portal Nacional de NFS-e pela primeira vez</div></div>
+    </div>
+    <div class="content-grid">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="alert alert-info"><div class="alert-icon">ℹ️</div><div><strong>O que é o Portal Nacional de NFS-e?</strong>Plataforma do governo federal onde MEIs e empresas emitem a Nota Fiscal de Serviços eletrônica. Acesso gratuito pelo navegador ou app.</div></div>
+        <div class="alert alert-danger"><div class="alert-icon">🚨</div><div><strong>ATENÇÃO!</strong>Para usar o APP é <strong>pré-requisito</strong> fazer a configuração primeiro no Emissor Web!</div></div>
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>Formas de Login</h3>
+          <div class="login-grid">
+            <div class="login-opt"><div class="lo-icon">🏛️</div><div class="lo-title">Conta Gov.br</div><div class="lo-desc">Login com CPF. Disponível apenas para MEI.</div><div class="lo-badge">Recomendado</div></div>
+            <div class="login-opt"><div class="lo-icon">👤</div><div class="lo-title">Usuário/Senha</div><div class="lo-desc">Cadastro direto pelo portal emissor web.</div></div>
+            <div class="login-opt"><div class="lo-icon">🔐</div><div class="lo-title">Cert. Digital</div><div class="lo-desc">Acesso via certificado digital A1 ou A3.</div></div>
+          </div>
+        </div>
+        <div class="highlight-box"><strong>⚠️ Requisito Gov.br:</strong> O representante legal precisa ter selo <strong>Prata ou Ouro</strong>. Após login com CPF, o emissor abrirá com o CNPJ MEI automaticamente.</div>
       </div>
-      <div style="padding:10px;background:#fff;color:#333;font-size:10px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div>
-            <div style="color:#4CAF50;font-weight:700;margin-bottom:6px;">✏️ Rascunhos</div>
-            <div style="font-size:9px;color:#666;line-height:1.4;">A emissão de uma nova NFS-e é dividida em 4 passos: Pessoas, Serviço, Valores e Revisão/Emissão...</div>
-            <div style="margin-top:8px;padding:8px;background:#f5f5f5;border-radius:4px;">
-              <div style="font-size:9px;font-weight:700;">👤 Meus dados</div>
-              <div style="font-size:8px;color:#666;margin-top:4px;">CNPJ:<br>Nome:<br>E-mail: Não informado<br>Telefone: Não informado</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <h3><span class="ch-dot"></span>Como Acessar</h3>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">1</div><div class="si-content"><h4>Acesse o Portal</h4><p>Entre em <strong>nfse.gov.br</strong> pelo navegador do seu computador ou celular.</p></div></div>
+            <div class="step-item"><div class="si-num">2</div><div class="si-content"><h4>Escolha a forma de acesso</h4><p>Selecione entre <strong>Gov.br</strong>, usuário/senha ou certificado digital.</p></div></div>
+            <div class="step-item"><div class="si-num">3</div><div class="si-content"><h4>Faça o login</h4><p>Para Gov.br, insira seu <strong>CPF</strong>. O sistema abrirá com seus dados MEI automaticamente.</p></div></div>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><span style="font-weight:900;">NFSe <span style="font-weight:400;font-size:10px;opacity:0.8;">Portal de Gestão NFS-e</span></span><span style="font-size:12px;">🏠 🔔 ⚙️ 👤</span></div>
+          <div class="mock-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 0;">
+              <div style="padding:8px;border-right:1px solid #eee;"><div style="font-size:8px;font-weight:700;color:#1565C0;margin-bottom:4px;">USUÁRIO/SENHA</div><div class="mock-input" style="margin-bottom:3px;"></div><div class="mock-input" style="margin-bottom:6px;"></div><div style="background:#1565C0;color:white;padding:3px;text-align:center;border-radius:2px;font-size:8px;">Entrar</div></div>
+              <div style="padding:8px;border-right:1px solid #eee;text-align:center;"><div style="font-size:8px;font-weight:700;color:#1565C0;margin-bottom:4px;">CERT. DIGITAL</div><div style="font-size:22px;margin:8px 0;">🔐</div></div>
+              <div style="padding:8px;text-align:center;"><div style="font-size:8px;font-weight:700;color:#1565C0;margin-bottom:4px;">GOV.BR</div><div style="font-size:7px;color:#666;margin-bottom:6px;">Autenticação do cidadão</div><div style="background:#1565C0;color:white;padding:4px 6px;border-radius:3px;font-size:7px;">Entrar com gov.br</div></div>
             </div>
           </div>
-          <div>
-            <div style="color:#4CAF50;font-weight:700;margin-bottom:6px;">📋 Últimas NFS-e emitidas</div>
-            <div style="font-size:9px;color:#999;text-align:center;padding:12px 0;">Até o momento nenhuma NFS-e foi emitida.</div>
-            <div style="margin-top:8px;padding:8px;background:#f5f5f5;border-radius:4px;">
-              <div style="font-size:9px;font-weight:700;color:#666;margin-bottom:4px;">⚡ Acesso Rápido</div>
-              <div style="display:flex;gap:6px;font-size:20px;justify-content:center;">
-                <span style="background:rgba(200,200,255,0.3);border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #9C27B0;font-size:14px;">⚙️</span>
-                <span style="background:rgba(200,200,255,0.3);border-radius:50%;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #9C27B0;font-size:14px;">⭐</span>
+        </div>
+        <a href="https://www.nfse.gov.br" target="_blank" class="portal-btn">🌐 Acessar Portal Emissor NFSe</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 2: CONFIGURAÇÃO -->
+  <div class="section" id="sec-2">
+    <div class="sec-header">
+      <div class="sec-num">2</div>
+      <div><div class="sec-title">CONFIGU<span>RAÇÃO</span></div><div class="sec-subtitle">Obrigatória no primeiro acesso — configure antes de emitir qualquer nota</div></div>
+    </div>
+    <div class="content-grid">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="alert alert-success"><div class="alert-icon">✅</div><div><strong>Onde encontrar as Configurações?</strong>Após o login, clique nos ícones de configuração no menu — símbolo de engrenagem ⚙️ ou estrela ⭐.</div></div>
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>O que preencher</h3>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">1</div><div class="si-content"><h4>📧 E-mail</h4><p>Informe o e-mail para receber e enviar as NFS-e emitidas.</p></div></div>
+            <div class="step-item"><div class="si-num">2</div><div class="si-content"><h4>📱 Telefone</h4><p>Número de contato para geração das notas fiscais.</p></div></div>
+            <div class="step-item"><div class="si-num">3</div><div class="si-content"><h4>💰 Valor Aproximado dos Tributos</h4><p>Selecione a <strong>terceira opção</strong>: "Não informar nenhum valor estimado para os tributos".</p></div></div>
+          </div>
+        </div>
+        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div><strong>Atenção na opção de tributos!</strong>Sempre selecione a <strong>3ª opção</strong>. As outras opções podem gerar cobranças indevidas na nota fiscal.</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card"><h3><span class="ch-dot"></span>Tela de Configurações</h3></div>
+        <div class="mock">
+          <div class="mock-bar"><span style="font-weight:900;">NFSe <span style="font-weight:400;font-size:10px;opacity:0.8;">PORTAL CONTRIBUINTE</span></span><span style="font-size:11px;">🏠 ⚙️ ⭐ 👤</span></div>
+          <div class="mock-body">
+            <div style="color:var(--green);font-weight:700;font-size:12px;margin-bottom:8px;">Configurações</div>
+            <div class="mock-section-label">Informações Pessoais</div>
+            <div class="mock-info">O e-mail e telefone serão utilizados na geração da NFS-e e na impressão do DANFSe.</div>
+            <div class="mock-grid" style="margin-bottom:12px;">
+              <div class="mock-field"><label>E-mail</label><div class="mock-input"></div></div>
+              <div class="mock-field"><label>Telefone</label><div class="mock-input"></div></div>
+            </div>
+            <div class="mock-section-label">Valor Aproximado dos Tributos</div>
+            <div style="border:1px solid #ddd;padding:5px 8px;border-radius:3px;font-size:9px;margin-bottom:8px;background:#f9f9f9;">Optante - Microempreendedor Individual (MEI)</div>
+            <div class="mock-radio">○ Preencher os valores monetários em cada NFS-e emitida</div>
+            <div class="mock-radio">○ Configurar os valores percentuais correspondentes</div>
+            <div class="mock-highlight">▶ ● Não informar nenhum valor estimado para os Tributos (Decreto 8.264/2014)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 3: SERVIÇOS FAVORITOS -->
+  <div class="section" id="sec-3">
+    <div class="sec-header">
+      <div class="sec-num">3</div>
+      <div><div class="sec-title">SERVIÇOS <span>FAVORITOS</span></div><div class="sec-subtitle">Necessário para emitir notas pelo App Mobile</div></div>
+    </div>
+    <div class="content-grid wide">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="alert alert-info"><div class="alert-icon">📱</div><div><strong>Por que cadastrar?</strong>Para emitir pelo App, os serviços precisam estar cadastrados como favoritos no Emissor Web. Eles aparecerão para seleção rápida no app.</div></div>
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>Passo a Passo</h3>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">1</div><div class="si-content"><h4>Acesse as Configurações</h4><p>Clique no ícone ⚙️ ou ⭐ no menu do Emissor Web.</p></div></div>
+            <div class="step-item"><div class="si-num">2</div><div class="si-content"><h4>Vá em "Serviços Favoritos"</h4><p>Localize a opção dentro das configurações.</p></div></div>
+            <div class="step-item"><div class="si-num">3</div><div class="si-content"><h4>Preencha e selecione a atividade</h4><p>Preencha os dados e selecione a atividade abaixo:</p></div></div>
+          </div>
+          <div class="activity-code">📋 02.01.01 — Serviços de pesquisas e desenvolvimento de qualquer natureza</div>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">4</div><div class="si-content"><h4>Clique em "Novo Serviço Favorito"</h4><p>Confirme clicando em <strong>"+ Novo Serviço Favorito"</strong> para salvar.</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card"><h3><span class="ch-dot"></span>Tela de Serviços Favoritos</h3></div>
+        <div class="mock">
+          <div class="mock-bar"><span style="font-weight:900;">NFSe <span style="font-weight:400;font-size:10px;opacity:0.8;">PORTAL CONTRIBUINTE</span></span><span style="font-size:11px;">🏠 ⚙️ ⭐ 👤</span></div>
+          <div class="mock-body">
+            <div style="color:var(--green);font-weight:700;font-size:11px;margin-bottom:6px;">Serviços favoritos</div>
+            <div style="font-size:8px;color:#666;margin-bottom:8px;">Salve os serviços mais frequentemente prestados para simplificar suas emissões.</div>
+            <div style="background:#D32F2F;color:white;display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:3px;font-size:9px;font-weight:700;margin-bottom:10px;">+ Novo Serviço Favorito</div>
+            <div class="mock-field"><label>Apelido *</label><div style="border:1px solid #ccc;border-radius:3px;padding:3px 6px;font-size:9px;background:#fafafa;">instrutoria</div></div>
+            <div style="background:#E1BEE7;padding:5px 8px;border-radius:3px;font-size:8px;color:#4A148C;margin:4px 0;">Esse será o termo que o ajudará a identificar este serviço.</div>
+            <div style="background:#C8E6C9;padding:5px 8px;border-radius:3px;font-size:8px;color:#1B5E20;margin-bottom:6px;">✅ O serviço favorito foi cadastrado com sucesso</div>
+            <div style="border:1px solid #ddd;border-radius:3px;overflow:hidden;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;background:#f5f5f5;padding:4px 8px;font-size:7px;font-weight:700;color:#666;"><span>Código Serviço</span><span>Apelido</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;padding:5px 8px;font-size:8px;border-top:1px solid #eee;"><span>08.02.01.000</span><span style="color:var(--green);font-weight:700;">instrutoria</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 4: EMISSÃO WEB -->
+  <div class="section" id="sec-4">
+    <div class="sec-header">
+      <div class="sec-num">4</div>
+      <div><div class="sec-title">EMISSÃO <span>WEB</span></div><div class="sec-subtitle">Como emitir sua nota fiscal pelo computador — Emissão Completa</div></div>
+    </div>
+    <div class="content-grid">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>Passo a Passo</h3>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">1</div><div class="si-content"><h4>Acesse a Emissão Completa</h4><p>No menu, clique em um dos ícones de emissão e selecione <strong>"Emissão Completa"</strong>.</p></div></div>
+            <div class="step-item"><div class="si-num">2</div><div class="si-content"><h4>Data de Competência</h4><p>Informe sempre o <strong>mês anterior</strong> ao atual. Ex: julho → informe junho.</p></div></div>
+            <div class="step-item"><div class="si-num">3</div><div class="si-content"><h4>Tomador do Serviço = Zukkin</h4><p>O tomador é quem <strong>recebe</strong> o serviço — preencha com os dados do <strong>Zukkin</strong>.</p></div></div>
+            <div class="step-item"><div class="si-num">4</div><div class="si-content"><h4>Selecione a Atividade</h4><p>Mesmo sem estar nos favoritos, você pode selecionar diretamente:</p></div></div>
+          </div>
+          <div class="activity-code">📋 02.01.01 — Serviços de pesquisas e desenvolvimento de qualquer natureza</div>
+          <div class="step-list">
+            <div class="step-item"><div class="si-num">5</div><div class="si-content"><h4>Revise e Emita</h4><p>Confira todos os dados e clique em <strong>Emitir</strong>. Sua NFS-e estará pronta! 🎉</p></div></div>
+          </div>
+        </div>
+        <div class="alert alert-danger"><div class="alert-icon">🚨</div><div><strong>A T E N Ç Ã O — Endereço!</strong>Espaços em branco ou informações incorretas no endereço <strong>geram erro na emissão</strong>. Verifique com cuidado!</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="alert alert-info"><div class="alert-icon">🧾</div><div><strong>O que é a Emissão Completa?</strong>Modalidade obrigatória para exportação e serviços onde o ISSQN é devido no local do tomador. <strong>No Zukkin, sempre use Emissão Completa!</strong></div></div>
+        <div class="mock">
+          <div class="mock-bar"><span style="font-weight:900;">NFSe <span style="font-weight:400;font-size:10px;opacity:0.8;">PORTAL CONTRIBUINTE</span></span><span style="font-size:11px;">🏠 📋 ⚙️ 👤</span></div>
+          <div class="mock-body">
+            <div style="position:relative;padding-top:8px;">
+              <div style="position:absolute;right:4px;top:0;background:#fff;border:1px solid #ddd;border-radius:3px;padding:5px 8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);z-index:2;min-width:90px;">
+                <div style="font-size:7px;font-weight:700;color:#666;margin-bottom:3px;border-bottom:1px solid #eee;padding-bottom:2px;">Tipos de emissão</div>
+                <div style="background:#FFF3E0;border-left:2px solid #D32F2F;padding:2px 4px;font-size:8px;font-weight:700;color:#D32F2F;margin-bottom:2px;">Emissão completa</div>
+                <div style="padding:2px 4px;font-size:8px;color:#666;">Emissão simplificada</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:40px;">
+                <div style="padding:5px;background:#f9f9f9;border-radius:3px;font-size:8px;"><div style="font-weight:700;color:var(--green);margin-bottom:2px;">✏️ Rascunhos</div><div style="color:#999;">Nenhum rascunho.</div></div>
+                <div style="padding:5px;background:#f9f9f9;border-radius:3px;font-size:7px;"><div style="font-weight:700;color:var(--green);margin-bottom:3px;">📋 Últimas NFS-e</div><div style="display:flex;justify-content:space-between;color:#555;border-bottom:1px solid #eee;padding-bottom:2px;margin-bottom:2px;"><span>01/12</span><span>R$1.000</span></div><div style="display:flex;justify-content:space-between;color:#555;"><span>28/11</span><span>R$1.000</span></div></div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 5: PASSO 2 - EMAIL E TELEFONE ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="step-number">2</div>
-    <p class="body-text">
-      Ao entrar nas configurações, preencha os campos com email e telefone que serão utilizados na geração da NFS-e.
-    </p>
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:13px;">NFSe <span style="font-size:10px;font-weight:400;">PORTAL CONTRIBUINTE</span></span>
-        <div style="font-size:12px;">🏠 🔔 📋 📄 📝 ⚙️ ⭐ 👤</div>
-      </div>
-      <div style="padding:12px;background:#fff;color:#333;font-size:10px;">
-        <div style="color:#2e7d32;font-weight:700;font-size:12px;margin-bottom:10px;">Configurações</div>
-        <div style="background:#E8F5E9;padding:6px 10px;font-size:9px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:10px;">Informações Pessoais</div>
-        <div style="background:#E3F2FD;padding:8px;border-radius:4px;font-size:9px;color:#1565C0;margin-bottom:10px;">O e-mail e o telefone informados abaixo serão utilizados na geração da NFS-e e posteriormente na impressão do DANFSe...</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
-          <div>
-            <label style="font-size:9px;color:#666;">E-mail</label>
-            <div style="border:1px solid #ccc;border-radius:3px;height:22px;background:#fafafa;"></div>
-          </div>
-          <div>
-            <label style="font-size:9px;color:#666;">Telefone</label>
-            <div style="border:1px solid #ccc;border-radius:3px;height:22px;background:#fafafa;"></div>
-          </div>
-        </div>
-        <div style="background:#E8F5E9;padding:6px 10px;font-size:9px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Valor Aproximado dos Tributos</div>
-        <div style="background:#E3F2FD;padding:6px;border-radius:4px;font-size:9px;color:#1565C0;margin-bottom:8px;">As opções configuráveis para os valores aproximados dos tributos variam de acordo com a opção atual do Estabelecimento no Simples Nacional.</div>
-        <div style="font-size:9px;margin-bottom:4px;color:#555;">Opção atual no Simples Nacional</div>
-        <div style="border:1px solid #ccc;padding:5px 8px;border-radius:3px;font-size:9px;margin-bottom:8px;">Optante - Microempreendedor Individual (MEI)</div>
-        <div style="font-size:9px;color:#555;margin-bottom:6px;line-height:1.4;">Selecione abaixo a opção que melhor atende ao seu perfil...</div>
-        <div style="font-size:9px;color:#555;margin-bottom:3px;">○ Preencher os valores monetários em cada NFS-e emitida</div>
-        <div style="font-size:9px;color:#555;margin-bottom:3px;">○ Configurar os valores percentuais correspondentes</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:9px;color:#D32F2F;font-weight:700;">
-          <span style="color:#D32F2F;font-size:12px;">▶</span>
-          ● Não informar nenhum valor estimado para os Tributos (Decreto 8.264/2014)
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 6: PASSO 3 - TRIBUTOS ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="step-number">3</div>
-    <p class="body-text">
-      Selecione no campo Valor Aproximado dos Tributos a <strong>"terceira opção"</strong> Não informar nenhum valor estimado para os tributos".
-    </p>
-    <div class="form-mock">
-      <div style="background:#E8F5E9;padding:6px 10px;font-size:9px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Valor Aproximado dos Tributos</div>
-      <div style="font-size:9px;color:#555;margin-bottom:6px;">Selecione abaixo a opção que melhor atende ao seu perfil:</div>
-      <div style="font-size:9px;color:#777;margin-bottom:4px;padding-left:4px;">○ Preencher os valores monetários em cada NFS-e emitida</div>
-      <div style="font-size:9px;color:#777;margin-bottom:4px;padding-left:4px;">○ Configurar os valores percentuais correspondentes</div>
-      <div style="display:flex;align-items:center;gap:6px;background:#FFF3E0;padding:6px 8px;border-radius:4px;border-left:3px solid #D32F2F;">
-        <span style="color:#D32F2F;font-size:14px;">▶</span>
-        <span style="font-size:9px;color:#D32F2F;font-weight:700;">● Não informar nenhum valor estimado para os Tributos (Decreto 8.264/2014)</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 7: PASSO 4 - SERVIÇOS FAVORITOS ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="step-number">4</div>
-    <p class="body-text">
-      Pronto! Você já pode acessar o Emissor de NFS-e! Se você for MEI e desejar utilizar o APP para emitir suas notas, será necessário cadastrar seus <strong>Serviços Favoritos</strong>. Acesse essa configuração por qualquer um dos ícones marcados abaixo.
-    </p>
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:13px;">NFSe <span style="font-size:10px;font-weight:400;">EMISSOR</span></span>
-        <div style="display:flex;gap:6px;font-size:12px;">🏠 🔔 📋 📄 📝 
-          <span style="background:rgba(200,150,255,0.4);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #CE93D8;font-size:10px;">⚙️</span>
-          <span style="background:rgba(200,150,255,0.4);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #CE93D8;font-size:10px;">⭐</span>
-          👤
-        </div>
-      </div>
-      <div style="padding:10px;background:#fff;color:#333;font-size:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div>
-          <div style="color:#4CAF50;font-weight:700;margin-bottom:4px;font-size:10px;">✏️ Rascunhos</div>
-          <div style="font-size:8px;color:#999;">Nenhum rascunho salvo.</div>
-          <div style="margin-top:8px;padding:6px;background:#f5f5f5;border-radius:3px;font-size:8px;">
-            <div style="font-weight:700;">👤 Meus dados</div>
-            <div style="color:#666;margin-top:2px;">CNPJ:<br>Nome:<br>E-mail: Não informado<br>Telefone: Não informado</div>
-          </div>
-        </div>
-        <div>
-          <div style="color:#4CAF50;font-weight:700;margin-bottom:4px;font-size:10px;">📋 Últimas NFS-e emitidas</div>
-          <div style="font-size:8px;color:#999;text-align:center;padding:8px 0;">Nenhuma NFS-e emitida.</div>
-          <div style="margin-top:8px;padding:6px;background:#f5f5f5;border-radius:3px;">
-            <div style="font-size:8px;font-weight:700;color:#666;margin-bottom:4px;">⚡ Acesso Rápido</div>
-            <div style="display:flex;gap:4px;justify-content:center;">
-              <span style="background:rgba(200,150,255,0.3);border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #9C27B0;font-size:12px;">⚙️</span>
-              <span style="background:rgba(200,150,255,0.3);border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #9C27B0;font-size:12px;">⭐</span>
-            </div>
+        <div class="card">
+          <h3><span class="ch-dot"></span>Resumo Rápido</h3>
+          <div class="summary-list">
+            <div class="summary-item"><span class="si-check">☑</span>Clique em Emissão Completa</div>
+            <div class="summary-item"><span class="si-check">☑</span>Data de Competência = mês anterior</div>
+            <div class="summary-item"><span class="si-check">☑</span>Tomador = Zukkin</div>
+            <div class="summary-item"><span class="si-check">☑</span>Atividade: 02.01.01</div>
+            <div class="summary-item"><span class="si-check">☑</span>Revise o endereço com atenção</div>
+            <div class="summary-item"><span class="si-check">☑</span>Clique em Emitir — Nota pronta! 🎉</div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ========== SLIDE 8: NOVO SERVIÇO FAVORITO ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <p class="body-text" style="font-size:22px;font-weight:700;">
-      Depois, clique em <span style="color:#D32F2F;">Novo Serviço Favorito.</span>
-    </p>
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:13px;">NFSe <span style="font-size:10px;">PORTAL CONTRIBUINTE</span></span>
-        <div style="font-size:11px;">🏠 🔔 📋 📄 📝 ⚙️ ⭐ 👤</div>
-      </div>
-      <div style="padding:12px;background:#fff;color:#333;font-size:10px;">
-        <div style="color:#2e7d32;font-weight:700;margin-bottom:6px;">Serviços favoritos</div>
-        <div style="font-size:9px;color:#555;margin-bottom:10px;line-height:1.4;">Salve os serviços que são mais frequentemente prestados e simplifique sua declaração de prestação de serviços para emissão da NFS-e.</div>
-        <div style="background:#D32F2F;color:white;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:4px;font-size:10px;font-weight:700;margin-bottom:8px;">+ Novo Serviço Favorito</div>
-        <div style="display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #eee;font-size:8px;color:#888;">
-          <span>🏛️</span><span>SEBRAE</span><span>🏦 CNM</span><span>⚡ ABRASF</span><span>🏢</span>
-        </div>
-      </div>
+  <!-- SEÇÃO 5: APP MOBILE -->
+  <div class="section" id="sec-5">
+    <div class="sec-header">
+      <div class="sec-num">5</div>
+      <div><div class="sec-title">APP <span>MOBILE</span></div><div class="sec-subtitle">Emita sua nota fiscal diretamente do celular — simples e fácil</div></div>
     </div>
-    <p class="body-text" style="margin-top:16px;">
-      Preencha os dados solicitados, e selecione a atividade: <strong>02.01.01 - Serviços de pesquisas e desenvolvimento de qualquer natureza.</strong> Logo após, clique em Novo Serviço Favorito.
-    </p>
-    <div class="screenshot">
-      <div style="padding:12px;background:#fff;color:#333;font-size:9px;">
-        <div style="margin-bottom:8px;">
-          <label style="font-size:8px;font-weight:700;color:#333;">Apelido *</label>
-          <div class="tooltip-box" style="margin:4px 0;">Esse será o termo que o ajudará posteriormente a identificar este serviço pré-configurado dentro do Sistema Nacional da NFS-e.</div>
-          <input style="width:100%;border:1px solid #ccc;padding:4px 6px;border-radius:3px;font-size:9px;" value="instrutoria">
-        </div>
-        <div style="margin-bottom:8px;">
-          <label style="font-size:8px;font-weight:700;">Código de Tributação Nacional *</label>
-          <div class="tooltip-box tooltip-green" style="margin:4px 0;">O Código de Tributação Nacional é a classificação nacional que permite a identificação dos serviços de forma padronizada para todos os municípios brasileiros.</div>
-          <div style="border:1px solid #ccc;padding:4px 8px;border-radius:3px;font-size:9px;background:#f5f5f5;">
-            <div style="padding:3px 0;color:#666;">04 - Serviços de saúde...</div>
-            <div style="padding:3px 0;color:#666;">08 - Serviços de educação...</div>
-            <div style="padding:3px 0;color:#666;">13 - Serviços relativos...</div>
+    <div class="content-grid">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div><strong>Pré-requisito obrigatório!</strong>Faça a <strong>configuração completa no Emissor Web</strong> (seções 2 e 3) antes de usar o app, incluindo os Serviços Favoritos.</div></div>
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>Baixe o Aplicativo</h3>
+          <div class="app-btns">
+            <div class="app-btn"><div class="ab-icon">🍎</div><div><div class="ab-sub">Disponível na</div><div class="ab-name">App Store</div></div></div>
+            <div class="app-btn"><div class="ab-icon">🤖</div><div><div class="ab-sub">Disponível no</div><div class="ab-name">Google Play</div></div></div>
           </div>
         </div>
-        <div style="background:#E8F5E9;padding:8px;border-radius:4px;color:#2e7d32;font-weight:700;font-size:9px;text-align:center;margin-bottom:8px;">✅ O serviço favorito foi cadastrado com sucesso</div>
-        <div style="font-size:9px;font-weight:700;margin-bottom:6px;">Serviços favoritos</div>
-        <div style="display:flex;gap:6px;margin-bottom:6px;">
-          <div style="background:#D32F2F;color:white;padding:4px 10px;border-radius:3px;font-size:8px;font-weight:700;">+ Novo Serviço Favorito</div>
-          <div style="border:1px solid #ccc;padding:4px 10px;border-radius:3px;font-size:8px;flex:1;">Pesquisa por apelido...</div>
-        </div>
-        <div style="border:1px solid #ddd;border-radius:4px;overflow:hidden;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;background:#f5f5f5;padding:5px 8px;font-size:8px;font-weight:700;color:#666;">
-            <span>Código Serviço</span><span>Apelido</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;padding:5px 8px;font-size:8px;">
-            <span>08.02.01.000</span><span>instrutoria</span>
+        <div class="alert alert-success"><div class="alert-icon">📄</div><div><strong>Como obter o PDF?</strong>Após emitir, toque sobre a nota na lista. O PDF ficará disponível para encaminhar ao cliente!</div></div>
+        <div class="card">
+          <h3><span class="ch-dot"></span>Resumo</h3>
+          <div class="summary-list">
+            <div class="summary-item"><span class="si-check">☑</span>Configuração prévia no Web feita</div>
+            <div class="summary-item"><span class="si-check">☑</span>Serviços favoritos cadastrados</div>
+            <div class="summary-item"><span class="si-check">☑</span>Baixe o app NFS-e Mobile</div>
+            <div class="summary-item"><span class="si-check">☑</span>Login com Gov.br ou usuário/senha</div>
+            <div class="summary-item"><span class="si-check">☑</span>Toque em "Emitir NFS-e"</div>
+            <div class="summary-item"><span class="si-check">☑</span>Informe o valor e emita — PDF pronto! 🎉</div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 9: EMITINDO A NOTA FISCAL ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="section-title">EMITINDO A<br><span class="red">NOTA FISCAL</span></div>
-    <p class="body-text">
-      Para emitir a nota fiscal pelo Emissor Web, basta clicar em um dos ícones marcados na imagem abaixo e selecionar a Emissão Completa.
-    </p>
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:13px;">NFSe <span style="font-size:10px;">PORTAL CONTRIBUINTE</span></span>
-        <div style="display:flex;gap:4px;font-size:11px;">🏠 
-          <span style="background:rgba(200,150,255,0.4);border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #CE93D8;font-size:9px;">📋</span>
-          📄 📝 ⚙️ ⭐ 👤
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card"><h3><span class="ch-dot"></span>Passo a Passo no App</h3></div>
+        <div class="mobile-grid">
+          <div class="mobile-item"><div class="mi-num">1</div><div class="mi-text">Baixe o <strong>NFS-e Mobile</strong> pela App Store ou Google Play</div></div>
+          <div class="mobile-item"><div class="mi-num">2</div><div class="mi-text">Acesse com <strong>Gov.br</strong> ou usuário e senha</div></div>
+          <div class="mobile-item"><div class="mi-num">3</div><div class="mi-text">Toque em <strong>"Emitir NFS-e"</strong></div></div>
+          <div class="mobile-item"><div class="mi-num">4</div><div class="mi-text">CPF/CNPJ do cliente é <strong>opcional</strong>. Selecione o serviço favorito</div></div>
+          <div class="mobile-item"><div class="mi-num">5</div><div class="mi-text">Preencha o <strong>valor</strong> do serviço prestado</div></div>
+          <div class="mobile-item"><div class="mi-num">6</div><div class="mi-text">Toque em <strong>"Emitir NFS-e"</strong> — Nota emitida! ✅</div></div>
+          <div class="mobile-item" style="grid-column:1/-1;"><div class="mi-num">7</div><div class="mi-text">Toque sobre a nota para acessar o <strong>PDF</strong> e encaminhar ao cliente</div></div>
         </div>
       </div>
-      <div style="padding:10px;background:#fff;color:#333;font-size:9px;position:relative;">
-        <div style="position:absolute;right:40px;top:28px;background:#fff;border:1px solid #ccc;border-radius:4px;padding:6px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:2;min-width:100px;">
-          <div style="font-size:8px;font-weight:700;color:#666;margin-bottom:4px;border-bottom:1px solid #eee;padding-bottom:3px;">Tipos de emissão</div>
-          <div style="padding:3px 4px;font-size:9px;background:#FFF3E0;border-left:2px solid #D32F2F;margin-bottom:2px;font-weight:700;color:#D32F2F;">Emissão completa</div>
-          <div style="padding:3px 4px;font-size:9px;color:#666;">Emissão simplificada</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div>
-            <div style="color:#4CAF50;font-weight:700;margin-bottom:4px;">✏️ Rascunhos</div>
-            <div style="font-size:8px;color:#999;">Nenhum rascunho salvo.</div>
-            <div style="margin-top:8px;padding:6px;background:#f5f5f5;border-radius:3px;font-size:8px;">
-              <div style="font-weight:700;">👤 Meus dados</div>
-              <div style="color:#666;">CNPJ:<br>Nome:</div>
-            </div>
-          </div>
-          <div>
-            <div style="color:#4CAF50;font-weight:700;margin-bottom:4px;">📋 Últimas NFS-e</div>
-            <div style="font-size:8px;color:#333;">
-              <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:2px;border-bottom:1px solid #eee;padding-bottom:2px;margin-bottom:2px;font-weight:700;color:#666;font-size:7px;">
-                <span>Criação</span><span>Emitido para</span><span>Valor</span>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:2px;font-size:7px;padding:1px 0;">
-                <span>01/12/2022</span><span style="color:#666;">Tomador e Intermediário...</span><span>1.000,00</span>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:2px;font-size:7px;padding:1px 0;">
-                <span>28/11/2022</span><span style="color:#666;">Tomador e Intermediário...</span><span>1.000,00</span>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:2px;font-size:7px;padding:1px 0;">
-                <span>27/11/2022</span><span style="color:#666;">Tomador e Intermediário...</span><span>1.000,00</span>
-              </div>
-            </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 6: DÚVIDAS -->
+  <div class="section" id="sec-6">
+    <div class="sec-header">
+      <div class="sec-num" style="font-size:60px;">?</div>
+      <div><div class="sec-title">FICOU COM <span>DÚVIDAS?</span></div><div class="sec-subtitle">Acesse os tutoriais em vídeo ou entre em contato com o RH</div></div>
+    </div>
+    <div class="content-grid">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card"><h3><span class="ch-dot"></span>Tutoriais em Vídeo</h3></div>
+        <div class="yt-link"><div class="yt-icon-box">▶</div><div class="yt-text"><h4>Como fazer o primeiro acesso e configurações</h4><p>Aprenda a preencher os dados e configurar o emissor de NFS-e.</p></div></div>
+        <div class="yt-link"><div class="yt-icon-box">▶</div><div class="yt-text"><h4>Como emitir sua nota pelo App NFS-e Mobile</h4><p>Tutorial completo de emissão pelo aplicativo mobile.</p></div></div>
+        <div class="yt-link"><div class="yt-icon-box">▶</div><div class="yt-text"><h4>Como emitir sua nota pelo Emissor Web</h4><p>Passo a passo completo para emissão pelo portal web.</p></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card card-red">
+          <h3><span class="ch-dot"></span>Resumo do Tutorial</h3>
+          <div class="summary-list">
+            <div class="summary-item" onclick="goTo(1)"><span class="si-check">1</span>Primeiro Acesso ao Portal NFSe</div>
+            <div class="summary-item" onclick="goTo(2)"><span class="si-check">2</span>Configuração de e-mail, telefone e tributos</div>
+            <div class="summary-item" onclick="goTo(3)"><span class="si-check">3</span>Cadastro de Serviços Favoritos</div>
+            <div class="summary-item" onclick="goTo(4)"><span class="si-check">4</span>Emissão Completa pelo Web</div>
+            <div class="summary-item" onclick="goTo(5)"><span class="si-check">5</span>Emissão pelo App Mobile</div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 10: EMISSÃO COMPLETA ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="section-title">EMISSÃO<br><span class="red">COMPLETA</span></div>
-    <p class="body-text">
-      A Emissão Completa é obrigatória para alguns tipos de prestação de serviço, como exportação e serviços cujo ISSQN é devido no local do tomador.
-    </p>
-    <p class="body-text">
-      Para emitir a nota fiscal de modo completo pelo portal web, basta clicar no ícone marcado na imagem abaixo e selecionar a opção <strong>"Emissão Completa"</strong>
-    </p>
-    <div class="screenshot">
-      <div style="background:#2e7d32;color:white;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:900;font-size:13px;">NFSe <span style="font-size:10px;">PORTAL CONTRIBUINTE</span></span>
-        <div style="font-size:11px;">🏠 📋 📄 📝 ⚙️ ⭐ 👤</div>
-      </div>
-      <div style="padding:10px;background:#fff;color:#333;font-size:9px;position:relative;">
-        <div style="position:absolute;right:50px;top:8px;background:#fff;border:1px solid #ccc;border-radius:4px;padding:6px 10px;box-shadow:0 2px 8px rgba(0,0,0,0.15);z-index:2;min-width:100px;">
-          <div style="font-size:8px;font-weight:700;color:#666;margin-bottom:4px;border-bottom:1px solid #eee;padding-bottom:3px;">Tipos de emissão</div>
-          <div style="padding:3px 4px;font-size:9px;background:#FFF3E0;border-left:2px solid #D32F2F;margin-bottom:2px;font-weight:700;color:#D32F2F;">Emissão completa</div>
-          <div style="padding:3px 4px;font-size:9px;color:#666;">Emissão simplificada</div>
+        <div class="card">
+          <h3><span class="ch-dot"></span>Contato</h3>
+          <div class="alert alert-info" style="margin-bottom:0;"><div class="alert-icon">📩</div><div><strong>Precisa de ajuda?</strong>Entre em contato com o time de RH da Zukkin para suporte no processo de emissão de notas.</div></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-          <div style="padding:6px;background:#f5f5f5;border-radius:3px;font-size:8px;">
-            <div style="font-weight:700;">👤 Meus dados</div>
-            <div style="color:#666;margin-top:2px;">CNPJ:<br>Nome:</div>
-          </div>
-          <div style="font-size:7px;color:#333;">
-            <div style="display:grid;grid-template-columns:1fr 2fr 1fr;gap:2px;font-size:7px;padding:1px 0;" v-for="i in 3">
-              <span>01/12/2022</span><span style="color:#666;">Tomador e Intermediário...</span><span>1.000,00</span>
-            </div>
-          </div>
+        <div style="text-align:center;padding:24px;">
+          <div style="font-size:48px;font-weight:900;color:var(--red);letter-spacing:-2px;margin-bottom:8px;">Zukkin</div>
+          <div style="font-size:13px;color:var(--gray2);">Portal de Recursos Humanos</div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 
-<!-- ========== SLIDE 11: PREENCHA OS DADOS ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <p class="body-text" style="font-size:20px;font-weight:700;text-align:left;">
-      Preencha com os dados solicitados abaixo, sendo a Data de Competência a do <strong>Mês anterior:</strong>
-    </p>
-    <div class="screenshot">
-      <div style="padding:12px;background:#fff;color:#333;font-size:9px;">
-        <div style="display:flex;justify-content:space-around;padding:8px 0;border-bottom:1px solid #eee;margin-bottom:10px;">
-          <div style="text-align:center;color:#2e7d32;font-size:9px;"><div style="font-size:16px;margin-bottom:3px;">👥</div>Pessoas</div>
-          <div style="text-align:center;color:#ccc;font-size:9px;"><div style="font-size:16px;margin-bottom:3px;">🔧</div>Serviço</div>
-          <div style="text-align:center;color:#ccc;font-size:9px;"><div style="font-size:16px;margin-bottom:3px;">💲</div>Valores</div>
-          <div style="text-align:center;color:#ccc;font-size:9px;"><div style="font-size:16px;margin-bottom:3px;">📋</div>Emitir</div>
-        </div>
-        <div style="margin-bottom:8px;">
-          <label style="font-size:8px;color:#666;">Data de Competência *</label>
-          <div style="border:1px solid #ccc;padding:4px;border-radius:3px;height:22px;width:80px;background:#fafafa;"></div>
-        </div>
-        <div class="tooltip-box" style="margin-bottom:8px;">Não selecionar o box "Informar série e número da DPS", pois é opcional.</div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Emitente da NFS-E</div>
-        <div style="font-size:8px;color:#555;margin-bottom:6px;">Você irá emitir esta NFS-e como? *</div>
-        <div style="display:flex;gap:12px;font-size:8px;margin-bottom:6px;">
-          <label>● Prestador</label>
-          <label>○ Tomador</label>
-          <label>○ Intermediário</label>
-        </div>
-        <div class="tooltip-box" style="margin-bottom:8px;">O número da inscrição já virá preenchido após a seleção do município.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-          <div><label style="font-size:8px;color:#666;">Município *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;background:#fafafa;"></div></div>
-          <div><label style="font-size:8px;color:#666;">Inscrição Municipal *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;background:#fafafa;"></div></div>
-        </div>
-        <div class="tooltip-box" style="margin-bottom:8px;">Todos os dados do CNPJ do MEI já virão pré preenchidos de acordo com o CNPJ que fez o login no sistema...</div>
-      </div>
-    </div>
-    <p class="body-text" style="color:#D32F2F;font-weight:700;font-size:18px;margin-top:16px;">
-      Tomador do serviço é quem está recebendo a prestação de serviços, ou seja <span style="color:#fff;">o Zukkin.</span>
-    </p>
-    <div class="screenshot">
-      <div style="padding:12px;background:#fff;color:#333;font-size:9px;">
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Tomador do Serviço</div>
-        <div style="font-size:8px;color:#555;margin-bottom:6px;">Onde está localizado o estabelecimento/domicílio? *</div>
-        <div style="display:flex;gap:12px;font-size:8px;margin-bottom:8px;">
-          <label>○ Tomador não informado</label>
-          <label>● Brasil</label>
-          <label>○ Exterior</label>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
-          <div><label style="font-size:8px;color:#666;">CPF/CNPJ *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;display:flex;align-items:center;padding:0 4px;gap:4px;"><span style="font-size:8px;">🔍</span><span style="font-size:8px;">📥</span></div></div>
-          <div><label style="font-size:8px;color:#666;">Inscrição Municipal</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-        </div>
-        <div style="margin-bottom:6px;"><label style="font-size:8px;color:#666;">Nome/Razão Social *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
-          <div><label style="font-size:8px;color:#666;">Telefone</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-          <div><label style="font-size:8px;color:#666;">E-mail</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-        </div>
-        <div style="font-size:8px;color:#555;">☐ Informar endereço</div>
-      </div>
-    </div>
-  </div>
+<div class="nav-footer">
+  <button class="btn-nav" id="btn-prev" onclick="prevSection()">← Anterior</button>
+  <div class="nav-progress" id="nav-progress"></div>
+  <button class="btn-nav btn-nav-next" id="btn-next" onclick="nextSection()">Próximo →</button>
 </div>
 
-<!-- ========== SLIDE 12: ATENÇÃO! ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="atencao-red">A T E N Ç Ã O!</div>
-    <p class="body-text">
-      No caso de preenchimento de endereço, esteja atento aos dados incluídos e espaços deixados em branco, que <strong>geram erro na emissão da nota.</strong>
-    </p>
-    <div class="screenshot">
-      <div style="padding:12px;background:#fff;color:#333;font-size:9px;">
-        <div style="font-size:8px;color:#555;margin-bottom:6px;">☑ Informar endereço</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
-          <div><label style="font-size:8px;color:#D32F2F;font-weight:700;">CEP *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;display:flex;align-items:center;padding:0 4px;"><span>🔍</span></div></div>
-          <div><label style="font-size:8px;color:#D32F2F;font-weight:700;">Município *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;background:#f5f5f5;"></div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
-          <div><label style="font-size:8px;color:#D32F2F;font-weight:700;">Bairro *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-          <div><label style="font-size:8px;color:#D32F2F;font-weight:700;">Logradouro *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-          <div><label style="font-size:8px;color:#D32F2F;font-weight:700;">Número *</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-          <div><label style="font-size:8px;color:#666;">Complemento</label><div style="border:1px solid #ccc;border-radius:3px;height:20px;"></div></div>
-        </div>
-      </div>
-    </div>
-    <p class="body-text" style="margin-top:20px;">
-      Na opção de Emissão Completa, informar a atividade: <strong>02.01.01 - Serviços de pesquisas e desenvolvimento de qualquer natureza.</strong>
-    </p>
-    <div class="screenshot">
-      <div style="padding:12px;background:#fff;color:#333;font-size:9px;">
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Local da Prestação do Serviço</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-          <div><label style="font-size:8px;color:#666;">País *</label><div style="border:1px solid #ccc;border-radius:3px;padding:3px 6px;font-size:8px;">Brasil</div></div>
-          <div><label style="font-size:8px;color:#666;">Município *</label><div style="border:1px solid #ccc;border-radius:3px;padding:3px 6px;font-size:8px;">Florianópolis/SC</div></div>
-        </div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;margin-bottom:8px;">Serviço Prestado</div>
-        <div style="margin-bottom:6px;"><label style="font-size:8px;color:#666;">Código de Tributação Nacional *</label><div style="border:1px solid #ccc;border-radius:3px;padding:3px 6px;font-size:8px;display:flex;justify-content:space-between;"><span>02.01.01 - Serviços de pesquisas e desenvolvimento...</span><span>⭐</span></div></div>
-        <div style="background:#CE93D8;color:#4A148C;padding:6px;border-radius:4px;font-size:8px;font-weight:700;text-align:center;margin-bottom:6px;">O preenchimento da descrição do serviço é obrigatório</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 13: SUA NFS-E ESTÁ PRONTA ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="screenshot">
-      <div style="padding:16px;background:#fff;color:#333;font-size:9px;">
-        <div style="text-align:center;margin-bottom:12px;">
-          <div style="font-size:11px;font-weight:700;color:#333;border-bottom:1px solid #ccc;padding-bottom:6px;">NOTA FISCAL DE SERVIÇOS ELETRÔNICA<br><span style="font-weight:400;font-size:9px;">DANFSE - Documento Auxiliar da NFS-e</span></div>
-        </div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;text-align:center;margin-bottom:8px;">Dados da NFS-E</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:7px;color:#555;margin-bottom:8px;">
-          <div>Chave de Acesso da NFS-e</div>
-          <div style="text-align:right;"><div style="width:40px;height:40px;background:#eee;display:inline-block;border:1px solid #ccc;"></div></div>
-          <div>Data e Hora da emissão da DPS</div><div></div>
-          <div>Data e Hora da emissão da NFS-e</div><div></div>
-        </div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;text-align:center;margin-bottom:8px;">Emitente da NFS-E</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:7px;color:#555;margin-bottom:8px;">
-          <div>CNPJ / CPF / NIF</div><div>OPTANTE_MICROEMPREENDEDOR_INDIVIDUAL</div>
-        </div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;text-align:center;margin-bottom:8px;">Tomador do Serviço</div>
-        <div style="background:#E8F5E9;padding:5px 8px;font-size:8px;font-weight:700;color:#2e7d32;text-transform:uppercase;text-align:center;margin-bottom:4px;">Serviço Prestado</div>
-        <div style="font-size:7px;color:#555;">Descrição do Código de Tributação Nacional...</div>
-      </div>
-    </div>
-    <div class="pronto-bubble">
-      Sua NFS-e<br>está pronta!
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 14: EMITINDO PELO CELULAR ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body">
-    <div class="section-title" style="font-size:48px;">Emitindo a NFS-e<br><span class="red">pelo seu celular</span></div>
-    <p class="body-text">Emitir suas notas fiscais pelo APP é simples e fácil.</p>
-    <p class="body-text">Nas próximas páginas, aprenda passo a passo como fazer.</p>
-    <div style="font-size:96px;margin-top:24px;">📱</div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 15: APP - PASSOS 1 E 2 ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body" style="align-items:flex-start;text-align:left;">
-    <div class="step-row">
-      <div class="num">1</div>
-      <div class="txt">Baixe o aplicativo NFS-e Mobile pela App Store ou GooglePlay;</div>
-    </div>
-    <div style="display:flex;gap:12px;width:100%;margin-bottom:24px;align-items:center;">
-      <div style="background:#E8F5E9;border-radius:12px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#2e7d32;flex-shrink:0;">N</div>
-      <div class="app-stores" style="flex:1;justify-content:flex-start;">
-        <div class="app-store-btn">▶ Google Play</div>
-        <div class="app-store-btn">🍎 App Store</div>
-      </div>
-    </div>
-    <div class="step-row">
-      <div class="num">2</div>
-      <div class="txt">Com os dados da configuração e dos serviços favoritos preenchidos previamente no site, acesse com a conta <strong>gov.br</strong> ou login e senha;</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;">
-      <div class="screenshot">
-        <div style="padding:12px;background:#1565C0;color:#fff;font-size:9px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-          <div style="font-size:24px;">👤</div>
-          <div style="font-size:9px;letter-spacing:2px;opacity:0.8;">— Acesso —</div>
-          <div style="background:rgba(255,255,255,0.2);border-radius:4px;padding:4px 12px;font-size:8px;width:100%;text-align:center;">CPF / CNPJ</div>
-          <div style="background:rgba(255,255,255,0.2);border-radius:4px;padding:4px 12px;font-size:8px;width:100%;text-align:center;">Senha</div>
-          <div style="background:#1565C0;border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:3px 12px;font-size:8px;display:flex;align-items:center;gap:4px;"><span style="color:#D32F2F;font-size:10px;">▶</span> Entrar com gov.br</div>
-          <div style="font-size:8px;font-weight:700;opacity:0.8;">NFSe</div>
-        </div>
-      </div>
-      <div class="screenshot">
-        <div style="padding:10px;background:#fff;font-size:8px;color:#333;">
-          <div style="color:#1565C0;font-weight:700;font-size:10px;margin-bottom:6px;">gov.br</div>
-          <div style="font-size:8px;margin-bottom:6px;color:#555;">Identifique-se no gov.br com:</div>
-          <div style="background:#E3F2FD;padding:4px 6px;border-radius:3px;font-size:8px;margin-bottom:6px;display:flex;align-items:center;gap:4px;"><span>🔒</span> Número do CPF</div>
-          <div style="font-size:8px;color:#555;margin-bottom:4px;">CPF</div>
-          <div style="border:1px solid #ccc;border-radius:3px;padding:4px;font-size:8px;color:#999;margin-bottom:6px;">Digite seu CPF</div>
-          <div style="background:#1565C0;color:white;padding:5px;border-radius:4px;font-size:8px;text-align:center;margin-bottom:6px;">Continuar</div>
-          <div style="font-size:7px;color:#666;">Outras opções de identificação:</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 16: APP - PASSOS 3 A 7 ========== -->
-<div class="slide">
-  <div class="stripes"></div>
-  <div class="slide-body" style="align-items:flex-start;text-align:left;">
-    <div class="step-row">
-      <div class="num">3</div>
-      <div class="txt">Toque em emitir NFS-e;</div>
-    </div>
-    <div class="step-row">
-      <div class="num">4</div>
-      <div class="txt">O campo CPF/CNPJ do cliente é opcional. Selecione o serviço prestado. (Aqui aparecerão os serviços previamente cadastrados como favoritos no Emissor Web);</div>
-    </div>
-    <div class="step-row">
-      <div class="num">5</div>
-      <div class="txt">Preencha com o valor do serviço prestado e toque em Emitir NFS-e;</div>
-    </div>
-    <div class="step-row">
-      <div class="num">6</div>
-      <div class="txt">Nota Fiscal emitida com sucesso!</div>
-    </div>
-    <div class="step-row">
-      <div class="num">7</div>
-      <div class="txt">Basta clicar em cima da nota que estará disponível o PDF para encaminhar ao cliente!</div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== SLIDE 17: FICOU COM DÚVIDAS ========== -->
-<div class="slide" style="background:linear-gradient(180deg,#222 0%,#333 100%);">
-  <div class="slide-body">
-    <div class="duvidas-title">FICOU COM<br>DÚVIDAS?</div>
-    <div class="youtube-link">
-      <div class="yt-icon">▶</div>
-      <div class="yt-text"><strong>Como fazer o primeiro acesso e preencher os dados e configurações</strong> para poder utilizar o emissor de NFSe.</div>
-    </div>
-    <div class="youtube-link">
-      <div class="yt-icon">▶</div>
-      <div class="yt-text"><strong>Como emitir sua nota de serviço pelo APP NFS-E Mobile.</strong></div>
-    </div>
-    <div class="youtube-link">
-      <div class="yt-icon">▶</div>
-      <div class="yt-text"><strong>Como emitir sua nota de serviço pelo Emissor Web.</strong></div>
-    </div>
-    <div class="zukkin-logo">Zukkin</div>
-  </div>
-</div>
-
+<script>
+  const TOTAL = 7;
+  let current = 0;
+  function goTo(index) {
+    document.getElementById('sec-'+current).classList.remove('active');
+    document.querySelectorAll('.nav-btn')[current].classList.remove('active');
+    if(current>0) document.querySelectorAll('.nav-btn')[current].classList.add('done');
+    current = index;
+    document.getElementById('sec-'+current).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i<current) b.classList.add('done'); else b.classList.remove('done'); });
+    document.querySelectorAll('.nav-btn')[current].classList.add('active');
+    document.querySelectorAll('.nav-btn')[current].classList.remove('done');
+    updateControls();
+    document.getElementById('sec-'+current).scrollTop=0;
+  }
+  function nextSection(){ if(current<TOTAL-1) goTo(current+1); else goTo(0); }
+  function prevSection(){ if(current>0) goTo(current-1); }
+  function updateControls(){
+    document.getElementById('btn-prev').disabled = current===0;
+    document.getElementById('btn-next').textContent = current===TOTAL-1 ? '🏠 Início' : 'Próximo →';
+    const prog = document.getElementById('nav-progress');
+    prog.innerHTML='';
+    for(let i=0;i<TOTAL;i++){
+      const dot=document.createElement('div');
+      dot.className='np-dot'+(i===current?' active':i<current?' done':'');
+      dot.onclick=()=>goTo(i);
+      prog.appendChild(dot);
+    }
+  }
+  updateControls();
+</script>
 </body>
 </html>
