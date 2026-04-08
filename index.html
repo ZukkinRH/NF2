@@ -63,9 +63,10 @@
   .card h3 .ch-dot { width:8px; height:8px; background:var(--red); border-radius:50%; flex-shrink:0; }
   .card-red { border-left:3px solid var(--red); }
 
-  .alert { border-radius:10px; padding:14px 18px; display:flex; gap:12px; font-size:14px; line-height:1.6; margin-bottom:16px; }
-  .alert-icon { font-size:20px; flex-shrink:0; }
-  .alert strong { display:block; font-size:14px; margin-bottom:2px; }
+  .alert { border-radius:10px; padding:14px 18px; display:flex; gap:12px; align-items:flex-start; font-size:14px; line-height:1.6; margin-bottom:16px; }
+  .alert-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+  .alert-text strong { display:block; font-size:14px; font-weight:700; margin-bottom:4px; }
+  .alert-text p { font-size:14px; line-height:1.6; margin:0; }
   .alert-danger { background:rgba(211,47,47,0.15); border:1px solid rgba(211,47,47,0.3); color:#ffcdd2; }
   .alert-warning { background:rgba(245,127,23,0.15); border:1px solid rgba(245,127,23,0.3); color:#ffe0b2; }
   .alert-success { background:rgba(46,125,50,0.15); border:1px solid rgba(46,125,50,0.3); color:#c8e6c9; }
@@ -106,13 +107,13 @@
   .mobile-item .mi-text strong { color:var(--white); }
 
   .app-btns { display:flex; gap:12px; margin:16px 0; }
-  .app-btn { flex:1; background:#1a1a1a; border:1px solid #444; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; color:white; cursor:pointer; transition:all 0.2s; }
+  .app-btn { flex:1; background:#1a1a1a; border:1px solid #444; border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:12px; color:white; cursor:pointer; transition:all 0.2s; text-decoration:none; }
   .app-btn:hover { border-color:var(--red); }
   .app-btn .ab-icon { font-size:24px; }
   .app-btn .ab-sub { font-size:10px; color:var(--gray2); }
   .app-btn .ab-name { font-size:15px; font-weight:700; }
 
-  .yt-link { background:var(--card); border:1px solid #3a3a3a; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s; color:inherit; }
+  .yt-link { background:var(--card); border:1px solid #3a3a3a; border-radius:10px; padding:16px 20px; display:flex; align-items:center; gap:16px; margin-bottom:12px; cursor:pointer; transition:all 0.2s; color:inherit; text-decoration:none; }
   .yt-link:hover { border-color:var(--red); transform:translateX(4px); }
   .yt-icon-box { background:var(--red); border-radius:8px; width:48px; height:40px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
   .yt-text h4 { font-size:14px; font-weight:700; margin-bottom:3px; }
@@ -194,8 +195,14 @@
     </div>
     <div class="content-grid">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="alert alert-info"><div class="alert-icon">ℹ️</div><div><strong>O que é o Portal Nacional de NFS-e?</strong>Plataforma do governo federal onde MEIs e empresas emitem a Nota Fiscal de Serviços eletrônica. Acesso gratuito pelo navegador ou app.</div></div>
-        <div class="alert alert-danger"><div class="alert-icon">🚨</div><div><strong>ATENÇÃO!</strong>Para usar o APP é <strong>pré-requisito</strong> fazer a configuração primeiro no Emissor Web!</div></div>
+        <div class="alert alert-info">
+          <div class="alert-icon">ℹ️</div>
+          <div class="alert-text"><strong>O que é o Portal Nacional de NFS-e?</strong><p>Plataforma do governo federal onde MEIs e empresas emitem a Nota Fiscal de Serviços eletrônica. Acesso gratuito pelo navegador ou app.</p></div>
+        </div>
+        <div class="alert alert-danger">
+          <div class="alert-icon">🚨</div>
+          <div class="alert-text"><strong>ATENÇÃO!</strong><p>Para usar o APP é <strong>pré-requisito</strong> fazer a configuração primeiro no Emissor Web!</p></div>
+        </div>
         <div class="card card-red">
           <h3><span class="ch-dot"></span>Formas de Login</h3>
           <div class="login-grid">
@@ -238,7 +245,10 @@
     </div>
     <div class="content-grid">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="alert alert-success"><div class="alert-icon">✅</div><div><strong>Onde encontrar as Configurações?</strong>Após o login, clique nos ícones de configuração no menu — símbolo de engrenagem ⚙️ ou estrela ⭐.</div></div>
+        <div class="alert alert-success">
+          <div class="alert-icon">✅</div>
+          <div class="alert-text"><strong>Onde encontrar as Configurações?</strong><p>Após o login, clique nos ícones de configuração no menu — símbolo de engrenagem ⚙️ ou estrela ⭐.</p></div>
+        </div>
         <div class="card card-red">
           <h3><span class="ch-dot"></span>O que preencher</h3>
           <div class="step-list">
@@ -247,7 +257,10 @@
             <div class="step-item"><div class="si-num">3</div><div class="si-content"><h4>💰 Valor Aproximado dos Tributos</h4><p>Selecione a <strong>terceira opção</strong>: "Não informar nenhum valor estimado para os tributos".</p></div></div>
           </div>
         </div>
-        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div><strong>Atenção na opção de tributos!</strong>Sempre selecione a <strong>3ª opção</strong>. As outras opções podem gerar cobranças indevidas na nota fiscal.</div></div>
+        <div class="alert alert-warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><strong>Atenção na opção de tributos!</strong><p>Sempre selecione a <strong>3ª opção</strong>. As outras opções podem gerar cobranças indevidas na nota fiscal.</p></div>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="card"><h3><span class="ch-dot"></span>Tela de Configurações</h3></div>
@@ -280,7 +293,10 @@
     </div>
     <div class="content-grid wide">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="alert alert-info"><div class="alert-icon">📱</div><div><strong>Por que cadastrar?</strong>Para emitir pelo App, os serviços precisam estar cadastrados como favoritos no Emissor Web. Eles aparecerão para seleção rápida no app.</div></div>
+        <div class="alert alert-info">
+          <div class="alert-icon">📱</div>
+          <div class="alert-text"><strong>Por que cadastrar?</strong><p>Para emitir pelo App, os serviços precisam estar cadastrados como favoritos no Emissor Web. Eles aparecerão para seleção rápida no app.</p></div>
+        </div>
         <div class="card card-red">
           <h3><span class="ch-dot"></span>Passo a Passo</h3>
           <div class="step-list">
@@ -336,10 +352,16 @@
             <div class="step-item"><div class="si-num">5</div><div class="si-content"><h4>Revise e Emita</h4><p>Confira todos os dados e clique em <strong>Emitir</strong>. Sua NFS-e estará pronta! 🎉</p></div></div>
           </div>
         </div>
-        <div class="alert alert-danger"><div class="alert-icon">🚨</div><div><strong>A T E N Ç Ã O — Endereço!</strong>Espaços em branco ou informações incorretas no endereço <strong>geram erro na emissão</strong>. Verifique com cuidado!</div></div>
+        <div class="alert alert-danger">
+          <div class="alert-icon">🚨</div>
+          <div class="alert-text"><strong>A T E N Ç Ã O — Endereço!</strong><p>Espaços em branco ou informações incorretas no endereço <strong>geram erro na emissão</strong>. Verifique com cuidado!</p></div>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="alert alert-info"><div class="alert-icon">🧾</div><div><strong>O que é a Emissão Completa?</strong>Modalidade obrigatória para exportação e serviços onde o ISSQN é devido no local do tomador. <strong>No Zukkin, sempre use Emissão Completa!</strong></div></div>
+        <div class="alert alert-info">
+          <div class="alert-icon">🧾</div>
+          <div class="alert-text"><strong>O que é a Emissão Completa?</strong><p>Modalidade obrigatória para exportação e serviços onde o ISSQN é devido no local do tomador. No Zukkin, sempre use <strong>Emissão Completa!</strong></p></div>
+        </div>
         <div class="mock">
           <div class="mock-bar"><span style="font-weight:900;">NFSe <span style="font-weight:400;font-size:10px;opacity:0.8;">PORTAL CONTRIBUINTE</span></span><span style="font-size:11px;">🏠 📋 ⚙️ 👤</span></div>
           <div class="mock-body">
@@ -379,15 +401,27 @@
     </div>
     <div class="content-grid">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="alert alert-warning"><div class="alert-icon">⚠️</div><div><strong>Pré-requisito obrigatório!</strong>Faça a <strong>configuração completa no Emissor Web</strong> (seções 2 e 3) antes de usar o app, incluindo os Serviços Favoritos.</div></div>
+        <div class="alert alert-warning">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-text"><strong>Pré-requisito obrigatório!</strong><p>Faça a configuração completa no Emissor Web (seções 2 e 3) antes de usar o app, incluindo os Serviços Favoritos.</p></div>
+        </div>
         <div class="card card-red">
           <h3><span class="ch-dot"></span>Baixe o Aplicativo</h3>
           <div class="app-btns">
-            <div class="app-btn"><div class="ab-icon">🍎</div><div><div class="ab-sub">Disponível na</div><div class="ab-name">App Store</div></div></div>
-            <div class="app-btn"><div class="ab-icon">🤖</div><div><div class="ab-sub">Disponível no</div><div class="ab-name">Google Play</div></div></div>
+            <a class="app-btn" href="https://apps.apple.com/br/app/nfs-e-mobile/id1636995267" target="_blank">
+              <div class="ab-icon">🍎</div>
+              <div><div class="ab-sub">Disponível na</div><div class="ab-name">App Store</div></div>
+            </a>
+            <a class="app-btn" href="https://play.google.com/store/apps/details?id=br.gov.nfse" target="_blank">
+              <div class="ab-icon">🤖</div>
+              <div><div class="ab-sub">Disponível no</div><div class="ab-name">Google Play</div></div>
+            </a>
           </div>
         </div>
-        <div class="alert alert-success"><div class="alert-icon">📄</div><div><strong>Como obter o PDF?</strong>Após emitir, toque sobre a nota na lista. O PDF ficará disponível para encaminhar ao cliente!</div></div>
+        <div class="alert alert-success">
+          <div class="alert-icon">📄</div>
+          <div class="alert-text"><strong>Como obter o PDF?</strong><p>Após emitir, toque sobre a nota na lista. O PDF ficará disponível para encaminhar diretamente ao cliente!</p></div>
+        </div>
         <div class="card">
           <h3><span class="ch-dot"></span>Resumo</h3>
           <div class="summary-list">
@@ -441,7 +475,10 @@
         </div>
         <div class="card">
           <h3><span class="ch-dot"></span>Contato</h3>
-          <div class="alert alert-info" style="margin-bottom:0;"><div class="alert-icon">📩</div><div><strong>Precisa de ajuda?</strong>Entre em contato com o time de RH da Zukkin para suporte no processo de emissão de notas.</div></div>
+          <div class="alert alert-info" style="margin-bottom:0;">
+            <div class="alert-icon">📩</div>
+            <div class="alert-text"><strong>Precisa de ajuda?</strong><p>Entre em contato com o time de RH da Zukkin para suporte no processo de emissão de notas.</p></div>
+          </div>
         </div>
         <div style="text-align:center;padding:24px;">
           <div style="font-size:48px;font-weight:900;color:var(--red);letter-spacing:-2px;margin-bottom:8px;">Zukkin</div>
