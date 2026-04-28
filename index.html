@@ -663,7 +663,22 @@
       color:var(--gray3);
     }
 
-    .app-btn .ab-icon { font-size:24px; }
+    .store-icon {
+      width:26px;
+      height:26px;
+      flex-shrink:0;
+      display:block;
+    }
+
+    .store-icon.apple {
+      fill:#ffffff;
+    }
+
+    .store-icon.play {
+      width:28px;
+      height:28px;
+    }
+
     .app-btn .ab-sub { font-size:10px; color:var(--gray2); }
     .app-btn .ab-name { font-size:15px; font-weight:800; }
 
@@ -1230,14 +1245,22 @@
             <h3><span class="ch-dot"></span>Baixe o aplicativo</h3>
             <div class="app-btns">
               <a class="app-btn" href="https://apps.apple.com/br/search?term=NFS-e%20Mobile" target="_blank" rel="noopener noreferrer">
-                <div class="ab-icon">🍎</div>
+                <svg class="store-icon apple" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M17.05 12.536c.028 3.014 2.64 4.018 2.669 4.03-.022.07-.417 1.43-1.375 2.833-.828 1.213-1.687 2.423-3.041 2.448-1.33.025-1.758-.788-3.279-.788-1.523 0-1.998.763-3.255.813-1.309.05-2.307-1.31-3.142-2.518-1.707-2.47-3.011-6.975-1.26-10.019.87-1.512 2.426-2.468 4.116-2.493 1.284-.025 2.497.863 3.279.863.781 0 2.247-1.067 3.788-.91.645.027 2.456.261 3.618 1.961-.094.058-2.159 1.258-2.118 3.78zM14.97 4.433c.694-.84 1.162-2.01 1.034-3.173-1 .04-2.208.667-2.925 1.507-.643.742-1.205 1.932-1.052 3.069 1.115.087 2.249-.566 2.943-1.403z"/>
+                </svg>
                 <div>
                   <div class="ab-sub">Disponível na</div>
                   <div class="ab-name">App Store</div>
                 </div>
               </a>
+
               <a class="app-btn" href="https://play.google.com/store/search?q=NFS-e%20Mobile&c=apps" target="_blank" rel="noopener noreferrer">
-                <div class="ab-icon">🤖</div>
+                <svg class="store-icon play" viewBox="0 0 512 512" aria-hidden="true">
+                  <path fill="#00D084" d="M325.3 234.3 104.6 13.7l271.6 155.8-50.9 64.8z"/>
+                  <path fill="#FFD166" d="M376.2 342.5 104.6 498.3l220.7-220.6 50.9 64.8z"/>
+                  <path fill="#FF5252" d="M104.6 13.7C96.8 21.6 92 33 92 45.6v420.8c0 12.6 4.8 24 12.6 31.9l232.7-232.7L104.6 13.7z"/>
+                  <path fill="#4D96FF" d="M376.2 169.5 325.3 234.3l12 12-12 12 50.9 64.8 82.8-47.6c35.8-20.6 35.8-72.2 0-92.8l-82.8-47.6z"/>
+                </svg>
                 <div>
                   <div class="ab-sub">Disponível no</div>
                   <div class="ab-name">Google Play</div>
